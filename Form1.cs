@@ -18,6 +18,10 @@ namespace Lab1
         Pen blackPen;
         Font font;
         Brush brush;
+        Func<double, double> fun;
+        float xMax, xMin;
+        float step;
+        int cntTicks, tickLength;
         public Form1()
         {
             InitializeComponent();
@@ -28,6 +32,13 @@ namespace Lab1
             blackPen = new Pen(Color.Black, 1);
             font = new Font("Arial", 8);
             brush = Brushes.Black;
+
+            fun = x => Math.Sin(x);
+            xMax = (float)Math.PI;
+            xMin = (float)-Math.PI;
+            step = 0.002f;
+            cntTicks = 4;
+            tickLength = 8;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -37,7 +48,7 @@ namespace Lab1
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            DrawPlot(e, x => Math.Sin(x), (float)-Math.PI, (float)Math.PI, (float)0.002, 4, 8);
+            DrawPlot(e, fun, xMin, xMax, step, cntTicks, tickLength);
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -52,7 +63,7 @@ namespace Lab1
         {
             (double, double) extremes = FunExtremes(fun, xMin, xMax, step);
 
-            DrawAxis(e, blackPen);
+            DrawAxis(e, blackPen, extremes);
             DrawAxisLabels(e, font, brush, blackPen);
             DrawAxisTicks(e, blackPen, xMin, xMax, cntTicks, tickLength);
             DrawAxisValues(e, font, brush, xMin, xMax, extremes, cntTicks);
@@ -60,10 +71,11 @@ namespace Lab1
             DrawFun(e, fun, xMin, xMax, step, extremes);
         }
 
-        private void DrawAxis(PaintEventArgs e, Pen pen)
+        private void DrawAxis(PaintEventArgs e, Pen pen, (double min, double max) extremes)
         {
             Point axisX_1 = new Point(0, height / 2);
             Point axisX_2 = new Point(width, height / 2);
+
             e.Graphics.DrawLine(pen, axisX_1, axisX_2);
 
             Point axisY_1 = new Point(width / 2, 0);
@@ -146,8 +158,8 @@ namespace Lab1
             {
                 double mathY = fun(mathX);
 
-                float x = (float)((mathX - xMin) / (xMax - xMin) * width);
-                float y = height -(float)((mathY - yMin) / (yMax - yMin) * height);
+                float x = width / 2 + (float)(mathX / (xMax - xMin) * width);
+                float y = height / 2 - (float)(mathY / (yMax - yMin) * height);
 
                 points.Add(new PointF(x, y));
             }
@@ -171,6 +183,91 @@ namespace Lab1
             }
 
             return (yMin, yMax);
+        }
+
+        private void UpdateFun(Func<double, double> fun)
+        {
+            this.fun = fun;
+            Refresh();
+        }
+
+        private void sinToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateFun(x => Math.Sin(x));
+            
+        }
+
+        private void cosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateFun(x => Math.Cos(x));
+        }
+
+
+        private void x2ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateFun(x => Math.Pow(x, 2));
+        }
+
+        private void toolStripTextBox3_Click(object sender, EventArgs e)
+        {
+            
+            ((ToolStripTextBox)sender).SelectAll();
+        }
+
+        private void toolStripTextBox4_KeyDown(object sender, KeyEventArgs e)
+        {
+            
+            if (e.KeyCode == Keys.Enter && 
+                float.TryParse(((ToolStripTextBox)sender).Text, out float buf) &&
+                buf >= 0)
+            {
+                xMax = buf;
+                Refresh();
+            }
+        }
+
+        private void toolStripTextBox3_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter &&
+                float.TryParse(((ToolStripTextBox)sender).Text, out float buf) &&
+                buf != 0)
+            {
+                xMin = -Math.Abs(buf);
+                xMax = Math.Abs(buf);
+                Refresh();
+            }
+        }
+
+        private void toolStripTextBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter &&
+                int.TryParse(((ToolStripTextBox)sender).Text, out int buf) &&
+                buf > 0)
+            {
+                cntTicks = buf;
+                Refresh();
+            }
+        }
+
+        private void toolStripTextBox4_KeyDown_1(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter &&
+                int.TryParse(((ToolStripTextBox)sender).Text, out int buf) &&
+                buf > 0)
+            {
+                tickLength = buf;
+                Refresh();
+            }
+        }
+
+        private void x3ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateFun(x => Math.Pow(x, 3));
+        }
+
+        private void xToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateFun(x => x);
         }
     }
 }

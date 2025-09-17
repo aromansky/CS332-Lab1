@@ -14,15 +14,20 @@ namespace Lab1
     {
         int height;
         int width;
-        Font axisFont;
-        Brush textBrush;
+
+        Pen blackPen;
+        Font font;
+        Brush brush;
         public Form1()
         {
             InitializeComponent();
-            
 
-            axisFont = new Font("Arial", 8);
-            textBrush = Brushes.Black;
+            height = this.ClientSize.Height;
+            width = this.ClientSize.Width;
+
+            blackPen = new Pen(Color.Black, 1);
+            font = new Font("Arial", 8);
+            brush = Brushes.Black;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -45,15 +50,13 @@ namespace Lab1
         private void DrawPlot(PaintEventArgs e, Func<double, double> fun,
             float xMin, float xMax, float step, int cntTicks, int tickLength)
         {
-            using (Pen blackPen = new Pen(Color.Black, 1))
-            {
-                DrawAxis(e, blackPen);
-                DrawAxisLabels(e, blackPen);
-                DrawAxisTicks(e, blackPen, xMin, xMax, cntTicks, tickLength);
-            }
-
             (double, double) extremes = FunExtremes(fun, xMin, xMax, step);
-            DrawAxisValues(e, xMin, xMax, extremes, cntTicks);
+
+            DrawAxis(e, blackPen);
+            DrawAxisLabels(e, font, brush, blackPen);
+            DrawAxisTicks(e, blackPen, xMin, xMax, cntTicks, tickLength);
+            DrawAxisValues(e, font, brush, xMin, xMax, extremes, cntTicks);
+            
             DrawFun(e, fun, xMin, xMax, step, extremes);
         }
 
@@ -68,10 +71,10 @@ namespace Lab1
             e.Graphics.DrawLine(pen, axisY_1, axisY_2);
         }
 
-        private void DrawAxisLabels(PaintEventArgs e, Pen pen)
+        private void DrawAxisLabels(PaintEventArgs e, Font font, Brush brush, Pen pen)
         {
-            e.Graphics.DrawString("X", axisFont, textBrush, width - 20, height / 2 - 20);
-            e.Graphics.DrawString("Y", axisFont, textBrush, width / 2 - 15, 5);
+            e.Graphics.DrawString("X", font, brush, width - 20, height / 2 - 20);
+            e.Graphics.DrawString("Y", font, brush, width / 2 - 15, 5);
         }
 
         private void DrawAxisTicks(PaintEventArgs e, Pen pen, float xMin, float xMax, int cntTicks, int tickLength)
@@ -103,7 +106,7 @@ namespace Lab1
             e.Graphics.DrawLine(pen, tickStart, tickEnd);
         }
 
-        private void DrawAxisValues(PaintEventArgs e, float xMin, float xMax, (double min, double max) extremes, int cntTicks)
+        private void DrawAxisValues(PaintEventArgs e, Font font, Brush brush, float xMin, float xMax, (double min, double max) extremes, int cntTicks)
         {
             int xCenter = width / 2;
             int yCenter = height / 2;
@@ -113,20 +116,16 @@ namespace Lab1
             int stepY = height / (2 * cntTicks);
 
             var (yMin, yMax) = extremes;
-            double mathStepX = (xMax - xMin) / cntTicks;
-            double mathStepY = (yMax - yMin) / cntTicks;
+            double mathStepX = (xMax - xMin) / (2 * cntTicks);
+            double mathStepY = (yMax - yMin) / (2 * cntTicks);
 
-            using (Font font = new Font("Arial", 8))
-            using (Brush brush = new SolidBrush(Color.Black))
+            for (int i = 1; i <= cntTicks; i++)
             {
-                for (int i = 1; i <= cntTicks; i++)
-                {
-                    e.Graphics.DrawString($"{-i * mathStepX:F2}", font, brush, xCenter - stepX * i, yCenter + labelOffset);
-                    e.Graphics.DrawString($"{i * mathStepX:F2}", font, brush, xCenter + stepX * i, yCenter + labelOffset);
+                e.Graphics.DrawString($"{-i * mathStepX:F2}", font, brush, xCenter - stepX * i, yCenter + labelOffset);
+                e.Graphics.DrawString($"{i * mathStepX:F2}", font, brush, xCenter + stepX * i, yCenter + labelOffset);
 
-                    e.Graphics.DrawString($"{i * mathStepY:F2}", font, brush, xCenter + labelOffset, yCenter - stepY * i);
-                    e.Graphics.DrawString($"{-i * mathStepY:F2}", font, brush, xCenter + labelOffset, yCenter + stepY * i);
-                }
+                e.Graphics.DrawString($"{i * mathStepY:F2}", font, brush, xCenter + labelOffset, yCenter - stepY * i);
+                e.Graphics.DrawString($"{-i * mathStepY:F2}", font, brush, xCenter + labelOffset, yCenter + stepY * i);
             }
         }
 
@@ -148,7 +147,7 @@ namespace Lab1
                 double mathY = fun(mathX);
 
                 float x = (float)((mathX - xMin) / (xMax - xMin) * width);
-                float y = (float)((mathY - yMin) / (yMax - yMin) * height);
+                float y = height -(float)((mathY - yMin) / (yMax - yMin) * height);
 
                 points.Add(new PointF(x, y));
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,7 +64,7 @@ namespace Lab1
         {
             (double, double) extremes = FunExtremes(fun, xMin, xMax, step);
 
-            DrawAxis(e, blackPen, extremes);
+            DrawAxis(e, blackPen);
             DrawAxisLabels(e, font, brush, blackPen);
             DrawAxisTicks(e, blackPen, xMin, xMax, cntTicks, tickLength);
             DrawAxisValues(e, font, brush, xMin, xMax, extremes, cntTicks);
@@ -71,7 +72,7 @@ namespace Lab1
             DrawFun(e, fun, xMin, xMax, step, extremes);
         }
 
-        private void DrawAxis(PaintEventArgs e, Pen pen, (double min, double max) extremes)
+        private void DrawAxis(PaintEventArgs e, Pen pen)
         {
             Point axisX_1 = new Point(0, height / 2);
             Point axisX_2 = new Point(width, height / 2);
@@ -256,6 +257,18 @@ namespace Lab1
                 buf > 0)
             {
                 tickLength = buf;
+                Refresh();
+            }
+        }
+
+        private void toolStripTextBox5_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                if(
+                double.TryParse(((ToolStripTextBox)sender).Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double buf) &&
+                buf > 0)
+            {
+                step = (float)buf;
                 Refresh();
             }
         }

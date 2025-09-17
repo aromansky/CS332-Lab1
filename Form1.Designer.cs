@@ -44,6 +44,8 @@
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.tICKLENGTHToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripTextBox4 = new System.Windows.Forms.ToolStripTextBox();
+            this.sTEPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripTextBox5 = new System.Windows.Forms.ToolStripTextBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,7 +64,7 @@
             this.rangeToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1067, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1067, 30);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -118,9 +120,10 @@
             this.rangeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripTextBox2,
             this.cNTTICKSToolStripMenuItem,
-            this.tICKLENGTHToolStripMenuItem});
+            this.tICKLENGTHToolStripMenuItem,
+            this.sTEPToolStripMenuItem});
             this.rangeToolStripMenuItem.Name = "rangeToolStripMenuItem";
-            this.rangeToolStripMenuItem.Size = new System.Drawing.Size(103, 24);
+            this.rangeToolStripMenuItem.Size = new System.Drawing.Size(103, 26);
             this.rangeToolStripMenuItem.Text = "AxisSettings";
             // 
             // toolStripTextBox2
@@ -174,6 +177,23 @@
             this.toolStripTextBox4.KeyDown += new System.Windows.Forms.KeyEventHandler(this.toolStripTextBox4_KeyDown_1);
             this.toolStripTextBox4.Click += new System.EventHandler(this.toolStripTextBox3_Click);
             // 
+            // sTEPToolStripMenuItem
+            // 
+            this.sTEPToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripTextBox5});
+            this.sTEPToolStripMenuItem.Name = "sTEPToolStripMenuItem";
+            this.sTEPToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.sTEPToolStripMenuItem.Text = "STEP";
+            // 
+            // toolStripTextBox5
+            // 
+            this.toolStripTextBox5.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.toolStripTextBox5.Name = "toolStripTextBox5";
+            this.toolStripTextBox5.Size = new System.Drawing.Size(100, 27);
+            this.toolStripTextBox5.Text = "0.002";
+            this.toolStripTextBox5.KeyDown += new System.Windows.Forms.KeyEventHandler(this.toolStripTextBox5_KeyDown);
+            this.toolStripTextBox5.Click += new System.EventHandler(this.toolStripTextBox3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -210,5 +230,7 @@
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
         private System.Windows.Forms.ToolStripMenuItem tICKLENGTHToolStripMenuItem;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox4;
+        private System.Windows.Forms.ToolStripMenuItem sTEPToolStripMenuItem;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBox5;
     }
 }
